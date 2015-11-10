@@ -1,3 +1,8 @@
+"""
+Utility Mixins for unit tests
+"""
+
+import json
 import sys
 
 from mock import patch
@@ -141,3 +146,16 @@ def patch_testcase():
     # pylint: disable=protected-access
     TestCase._enter_atomics = enter_atomics_wrapper(TestCase._enter_atomics)
     TestCase._rollback_atomics = rollback_atomics_wrapper(TestCase._rollback_atomics)
+
+
+class PatchMediaTypeMixin(object):
+    """
+    Generic mixin for verifying unsupported media type in PATCH
+    """
+    def test_patch_unsupported_media_type(self):
+        response = self.client.patch(  # pylint: disable=no-member
+            self.url,
+            json.dumps({}),
+            content_type=self.unsupported_media_type
+        )
+        self.assertEqual(response.status_code, 415)
