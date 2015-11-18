@@ -306,7 +306,7 @@ class TestAccountAPI(UserAPITestCase):
             """
             Internal helper to perform the actual assertions
             """
-            with self.assertNumQueries(10):
+            with self.assertNumQueries(9):
                 response = self.send_get(self.client)
             data = response.data
             self.assertEqual(16, len(data))

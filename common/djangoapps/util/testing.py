@@ -100,6 +100,19 @@ class EventTestMixin(object):
         self.mock_tracker.reset_mock()
 
 
+class PatchMediaTypeMixin(object):
+    """
+    Generic mixin for verifying unsupported media type in PATCH
+    """
+    def test_patch_unsupported_media_type(self):
+        response = self.client.patch(  # pylint: disable=no-member
+            self.url,
+            json.dumps({}),
+            content_type=self.unsupported_media_type
+        )
+        self.assertEqual(response.status_code, 415)
+
+
 def patch_testcase():
     """
     Disable commit_on_success decorators for tests in TestCase subclasses.
