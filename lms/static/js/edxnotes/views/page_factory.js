@@ -12,7 +12,12 @@ define([
      * @return {Object} An instance of NotesPageView.
      */
     return function (params) {
-        var collection = new NotesCollection(params.notesList);
+        var collection = new NotesCollection(
+            params.notes,
+            {
+                parse: true
+            }
+        );
 
         return new NotesPageView({
             el: $('.wrapper-student-notes').get(0),

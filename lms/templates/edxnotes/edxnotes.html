@@ -107,7 +107,7 @@ import json
     <%block name="js_extra">
     <%static:require_module module_name="js/edxnotes/views/page_factory" class_name="NotesPageFactory">
         NotesPageFactory({
-            notesList: ${notes if notes is not None else []},
+            notes: ${notes if notes is not None else []},
             debugMode: ${debug}
         });
     </%static:require_module>
