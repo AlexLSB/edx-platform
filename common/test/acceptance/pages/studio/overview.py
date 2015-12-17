@@ -553,12 +553,12 @@ class CourseOutlinePage(CoursePage, CourseOutlineContainer):
         self.q(css=".action-save").first.click()
         self.wait_for_ajax()
 
-    def select_advanced_settings_tab(self):
+    def select_special_exam_tab(self):
         """
-        Select the advanced settings tab
+        Select the special exam settings tab
         """
-        self.q(css=".advanced-settings-button").first.click()
-        self.wait_for_element_presence('#id_not_timed', 'Advanced settings fields not present.')
+        self.q(css=".settings-tab-button[data-tab='special-exam']").first.click()
+        self.wait_for_element_presence('#id_not_timed', 'Special exam settings fields not present.')
 
     def make_exam_proctored(self):
         """

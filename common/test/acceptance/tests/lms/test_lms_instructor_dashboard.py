@@ -213,7 +213,7 @@ class ProctoredExamsTest(BaseInstructorDashboardTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select advanced settings tab
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
 
         self.course_outline.make_exam_proctored()
 
@@ -239,7 +239,7 @@ class ProctoredExamsTest(BaseInstructorDashboardTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select advanced settings tab
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
 
         self.course_outline.make_exam_timed()
 

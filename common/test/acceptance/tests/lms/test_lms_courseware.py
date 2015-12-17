@@ -234,7 +234,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.visit()
         self.course_outline.open_exam_settings_dialog()
 
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
         self.course_outline.make_exam_proctored()
 
         LogoutPage(self.browser).visit()
@@ -258,7 +258,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.visit()
         self.course_outline.open_exam_settings_dialog()
 
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
         self.course_outline.make_exam_timed()
 
         LogoutPage(self.browser).visit()
@@ -282,7 +282,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.visit()
 
         self.course_outline.open_exam_settings_dialog()
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
 
         self.course_outline.select_none_exam()
         self.assertFalse(self.course_outline.time_allotted_field_visible())
@@ -301,7 +301,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.visit()
 
         self.course_outline.open_exam_settings_dialog()
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
 
         self.course_outline.select_timed_exam()
         self.assertTrue(self.course_outline.time_allotted_field_visible())
@@ -320,7 +320,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.visit()
 
         self.course_outline.open_exam_settings_dialog()
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
 
         self.course_outline.select_proctored_exam()
         self.assertTrue(self.course_outline.time_allotted_field_visible())
@@ -339,7 +339,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.visit()
 
         self.course_outline.open_exam_settings_dialog()
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
 
         self.course_outline.select_proctored_exam()
         self.assertTrue(self.course_outline.exam_review_rules_field_visible())
@@ -362,7 +362,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.visit()
 
         self.course_outline.open_exam_settings_dialog()
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
 
         self.course_outline.select_timed_exam()
         self.assertFalse(self.course_outline.exam_review_rules_field_visible())
@@ -387,7 +387,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.visit()
 
         self.course_outline.open_exam_settings_dialog()
-        self.course_outline.select_advanced_settings_tab()
+        self.course_outline.select_special_exam_tab()
 
         self.course_outline.select_practice_exam()
         self.assertTrue(self.course_outline.time_allotted_field_visible())
