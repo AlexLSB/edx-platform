@@ -7,6 +7,8 @@ import urllib
 from django.core.urlresolvers import reverse
 from rest_framework import serializers
 
+from openedx.core.djangoapps.models.course_details import CourseDetails
+
 
 class _MediaSerializer(serializers.Serializer):  # pylint: disable=abstract-method
     """
@@ -33,9 +35,9 @@ class _CourseApiMediaCollectionSerializer(serializers.Serializer):  # pylint: di
     course_video = _MediaSerializer(source='*', uri_attribute='course_video_url')
 
 
-class CourseSerializer(serializers.Serializer):  # pylint: disable=abstract-method
+class CourseListSerializer(serializers.Serializer):  # pylint: disable=abstract-method
     """
-    Serializer for Course objects
+    Serializer for Course List objects
     """
 
     blocks_url = serializers.SerializerMethodField()
@@ -62,3 +64,23 @@ class CourseSerializer(serializers.Serializer):  # pylint: disable=abstract-meth
             urllib.urlencode({'course_id': course_overview.id}),
         ])
         return self.context['request'].build_absolute_uri(base_url)
+
+
+class CourseDetailSerializer(CourseListSerializer):  # pylint: disable=abstract-method
+    """
+    Serializer for Course detail objects
+    """
+
+    overview = serializers.SerializerMethodField()
+
+    def get_overview(self, course_overview):
+        """
+        Get the representation for SerializerMethodField `overview`
+        """
+        # Note: This makes a call to the modulestore, unlike the other
+        # fields from CourseListSerializer, which get their data
+        # from the CourseOverview object in SQL. Therefore, for performance
+        # reasons, it is expected that this serializer will be used only when
+        # serializing a single course, and not for serializing a list of
+        # courses.
+        return CourseDetails.fetch_about_attribute(course_overview.id, 'overview')
