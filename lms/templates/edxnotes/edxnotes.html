@@ -108,6 +108,8 @@ import json
     <%static:require_module module_name="js/edxnotes/views/page_factory" class_name="NotesPageFactory">
         NotesPageFactory({
             notes: ${notes if notes is not None else []},
+            notesEndpoint: '${notes_endpoint}',
+            pageSize: '${page_size}',
             debugMode: ${debug}
         });
     </%static:require_module>

@@ -6,7 +6,8 @@ define([
     /**
      * Factory method for the Notes page.
      * @param {Object} params Params for the Notes page.
-     * @param {Array} params.notesList A list of note models.
+     * @param {Object} params.notes Paginated notes info.
+     * @param {Number} params.pageSize Number of notes per page.
      * @param {Boolean} params.debugMode Enable the flag to see debug information.
      * @param {String} params.endpoint The endpoint of the store.
      * @return {Object} An instance of NotesPageView.
@@ -15,6 +16,8 @@ define([
         var collection = new NotesCollection(
             params.notes,
             {
+                url: params.notesEndpoint,
+                perPage: params.pageSize,
                 parse: true
             }
         );
@@ -23,7 +26,8 @@ define([
             el: $('.wrapper-student-notes').get(0),
             collection: collection,
             debug: params.debugMode,
-            endpoint: params.endpoint
+            endpoint: params.endpoint,
+            perPage: params.pageSize
         });
     };
 });

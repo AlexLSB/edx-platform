@@ -6,9 +6,19 @@ define([
     return PagingCollection.extend({
         model: NoteModel,
 
-        initialize: function(options) {
+        initialize: function(models, options) {
             PagingCollection.prototype.initialize.call(this);
-            this.server_api = _.extend({}, PagingCollection.prototype.server_api);
+
+            this.perPage = options.perPage;
+            this.server_api = _.extend(
+                {'text': options.text ? options.text : null}, PagingCollection.prototype.server_api
+            );
+
+            // delete text query param if null
+            if (this.server_api.text === null) {
+                delete this.server_api.text;
+            }
+
             // These are not specified for the Notes API
             delete this.server_api.sort_order;
             delete this.server_api.text_search;
