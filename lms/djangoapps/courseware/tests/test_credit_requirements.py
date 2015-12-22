@@ -32,8 +32,6 @@ class ProgressPageCreditRequirementsTest(ModuleStoreTestCase):
     PASSWORD = "test"
     USER_FULL_NAME = "Bob"
 
-    REQUIREMENT_HEADING = "Requirements for Course Credit"
-
     MIN_GRADE_REQ_DISPLAY = "Final Grade Credit Requirement"
     VERIFICATION_REQ_DISPLAY = "Midterm Exam Credit Requirement"
 
