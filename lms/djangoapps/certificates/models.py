@@ -309,6 +309,45 @@ class CertificateGenerationHistory(TimeStampedModel):
                ("regenerated" if self.is_regeneration else "generated", self.generated_by, self.created, self.course_id)
 
 
+class CertificateInvalidation(TimeStampedModel):
+    """
+    Model for storing Certificate Invalidation.
+    """
+    generated_certificate = models.ForeignKey(GeneratedCertificate)
+    invalidated_by = models.ForeignKey(User)
+    notes = models.TextField(default=None, null=True)
+    active = models.BooleanField(default=True)
+
+    class Meta(object):
+        app_label = "certificates"
+
+    def __unicode__(self):
+        return u"Certificate %s, invalidated by %s on %s." % \
+               (self.generated_certificate, self.invalidated_by, self.created)
+
+    def deactivate(self):
+        self.active = False
+        self.save()
+
+    @classmethod
+    def get_certificate_invalidations(cls, course_key):
+        certificate_invalidations = cls.objects.filter(
+            generated_certificate__course_id=course_key,
+            active=True,
+        )
+        data = []
+        for certificate_invalidation in certificate_invalidations:
+            data.append({
+                'id': certificate_invalidation.id,
+                'user_name': certificate_invalidation.generated_certificate.user.username,
+                'user_email': certificate_invalidation.generated_certificate.user.email,
+                'invalidated_by': certificate_invalidation.invalidated_by.username,
+                'invalidated': certificate_invalidation.generated_certificate.modified_date.strftime("%B %d, %Y"),
+                'notes': certificate_invalidation.notes,
+            })
+        return data
+
+
 @receiver(post_save, sender=GeneratedCertificate)
 def handle_post_cert_generated(sender, instance, **kwargs):  # pylint: disable=unused-argument
     """
