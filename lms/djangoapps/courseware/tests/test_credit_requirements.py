@@ -3,8 +3,8 @@ Tests for credit requirement display on the progress page.
 """
 
 import datetime
-import ddt
 
+import ddt
 from mock import patch
 from pytz import UTC
 
@@ -138,18 +138,16 @@ class ProgressPageCreditRequirementsTest(ModuleStoreTestCase):
         )
         self.assertContains(response, "Verification Failed")
 
-    @ddt.data(CourseMode.HONOR, CourseMode.AUDIT, CourseMode.PROFESSIONAL)
-    def test_credit_requirements_non_credit_enrollment(self, enrollment_mode):
-        # Test the progress table is not displayed to the non credit students.
-        self.enrollment.mode = enrollment_mode
-        self.enrollment.save()  # pylint: disable=no-member
-
-        # Check the progress page display
-        response = self._get_progress_page()
-        self.assertNotContains(response, self.REQUIREMENT_HEADING)
-
-    @ddt.data(CourseMode.VERIFIED, CourseMode.CREDIT_MODE)
-    def test_credit_requirements_credit_verified_enrollment(self, enrollment_mode):
+    @ddt.data(
+        (CourseMode.VERIFIED, True),
+        (CourseMode.CREDIT_MODE, True),
+        (CourseMode.HONOR, False),
+        (CourseMode.AUDIT, False),
+        (CourseMode.PROFESSIONAL, False),
+        (CourseMode.NO_ID_PROFESSIONAL_MODE, False)
+    )
+    @ddt.unpack
+    def test_credit_requirements_on_progress_page(self, enrollment_mode, display_requirement):
         # Test the progress table is only displayed to the
         # verified and credit students.
         self.enrollment.mode = enrollment_mode
@@ -157,9 +155,16 @@ class ProgressPageCreditRequirementsTest(ModuleStoreTestCase):
 
         # Check the progress page display
         response = self._get_progress_page()
-        # Expect that the requirements are displayed
-        self.assertContains(response, self.MIN_GRADE_REQ_DISPLAY)
-        self.assertContains(response, self.VERIFICATION_REQ_DISPLAY)
+        if display_requirement:
+            # Assert that the credit-eligibility section is present in the response.
+            self.assertContains(response, "credit-eligibility")
+            # Assert that the eligibility heading div is present in the response.
+            self.assertContains(response, "eligibility-heading")
+        else:
+            # Assert that the credit-eligibility section is not present in the response.
+            self.assertNotContains(response, "credit-eligibility")
+            # Assert that the eligibility heading div is not present in the response.
+            self.assertNotContains(response, "eligibility-heading")
 
     def _get_progress_page(self):
         """Load the progress page for the course the user is enrolled in. """
