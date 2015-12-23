@@ -1,8 +1,9 @@
-define(['underscore'], function(_) {
+define(['underscore', 'URI'], function(_, URI) {
     'use strict';
     var B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
         LONG_TEXT, PRUNED_TEXT, TRUNCATED_TEXT, SHORT_TEXT,
-        base64Encode, makeToken, getChapter, getSection, getUnit, getDefaultNotes;
+        base64Encode, makeToken, getChapter, getSection, getUnit, getDefaultNotes,
+        stringStartsWith, verifyUrl, verifyRequestParams;
 
     LONG_TEXT = [
         'Adipisicing elit, sed do eiusmod tempor incididunt ',
@@ -106,57 +107,81 @@ define(['underscore'], function(_) {
 
     getDefaultNotes = function () {
         // Note that the server returns notes in reverse chronological order (newest first).
-        return [
-            {
-                chapter: getChapter('Second Chapter', 0, 1, [1, 'w_n', 0]),
-                section: getSection('Third Section', 0, ['w_n', 1, 0]),
-                unit: getUnit('Fourth Unit', 0),
-                created: 'December 11, 2014 at 11:12AM',
-                updated: 'December 11, 2014 at 11:12AM',
-                text: 'Third added model',
-                quote: 'Note 4',
-                tags: ['Pumpkin', 'pumpkin', 'yummy']
-            },
-            {
-                chapter: getChapter('Second Chapter', 0, 1, [1, 'w_n', 0]),
-                section: getSection('Third Section', 0, ['w_n', 1, 0]),
-                unit: getUnit('Fourth Unit', 0),
-                created: 'December 11, 2014 at 11:11AM',
-                updated: 'December 11, 2014 at 11:11AM',
-                text: 'Third added model',
-                quote: 'Note 5'
-            },
-            {
-                chapter: getChapter('Second Chapter', 0, 1, [1, 'w_n', 0]),
-                section: getSection('Third Section', 0, ['w_n', 1, 0]),
-                unit: getUnit('Third Unit', 1),
-                created: 'December 11, 2014 at 11:11AM',
-                updated: 'December 11, 2014 at 11:11AM',
-                text: 'Second added model',
-                quote: 'Note 3',
-                tags: ['yummy']
-            },
-            {
-                chapter: getChapter('Second Chapter', 0, 1, [1, 'w_n', 0]),
-                section: getSection('Second Section', 1, [2]),
-                unit: getUnit('Second Unit', 2),
-                created: 'December 11, 2014 at 11:10AM',
-                updated: 'December 11, 2014 at 11:10AM',
-                text: 'First added model',
-                quote: 'Note 2',
-                tags: ['PUMPKIN', 'pie']
-            },
-            {
-                chapter: getChapter('First Chapter', 1, 0, [2]),
-                section: getSection('First Section', 2, [3]),
-                unit: getUnit('First Unit', 3),
-                created: 'December 11, 2014 at 11:10AM',
-                updated: 'December 11, 2014 at 11:10AM',
-                text: 'First added model',
-                quote: 'Note 1',
-                tags: ['pie', 'pumpkin']
-            }
-        ];
+        return {
+            'count': 5,
+            'current_page': 1,
+            'num_pages': 1,
+            'start': 0,
+            'next': null,
+            'previous': null,
+            'results': [
+                {
+                    chapter: getChapter('Second Chapter', 0, 1, [1, 'w_n', 0]),
+                    section: getSection('Third Section', 0, ['w_n', 1, 0]),
+                    unit: getUnit('Fourth Unit', 0),
+                    created: 'December 11, 2014 at 11:12AM',
+                    updated: 'December 11, 2014 at 11:12AM',
+                    text: 'Third added model',
+                    quote: 'Note 4',
+                    tags: ['Pumpkin', 'pumpkin', 'yummy']
+                },
+                {
+                    chapter: getChapter('Second Chapter', 0, 1, [1, 'w_n', 0]),
+                    section: getSection('Third Section', 0, ['w_n', 1, 0]),
+                    unit: getUnit('Fourth Unit', 0),
+                    created: 'December 11, 2014 at 11:11AM',
+                    updated: 'December 11, 2014 at 11:11AM',
+                    text: 'Third added model',
+                    quote: 'Note 5'
+                },
+                {
+                    chapter: getChapter('Second Chapter', 0, 1, [1, 'w_n', 0]),
+                    section: getSection('Third Section', 0, ['w_n', 1, 0]),
+                    unit: getUnit('Third Unit', 1),
+                    created: 'December 11, 2014 at 11:11AM',
+                    updated: 'December 11, 2014 at 11:11AM',
+                    text: 'Second added model',
+                    quote: 'Note 3',
+                    tags: ['yummy']
+                },
+                {
+                    chapter: getChapter('Second Chapter', 0, 1, [1, 'w_n', 0]),
+                    section: getSection('Second Section', 1, [2]),
+                    unit: getUnit('Second Unit', 2),
+                    created: 'December 11, 2014 at 11:10AM',
+                    updated: 'December 11, 2014 at 11:10AM',
+                    text: 'First added model',
+                    quote: 'Note 2',
+                    tags: ['PUMPKIN', 'pie']
+                },
+                {
+                    chapter: getChapter('First Chapter', 1, 0, [2]),
+                    section: getSection('First Section', 2, [3]),
+                    unit: getUnit('First Unit', 3),
+                    created: 'December 11, 2014 at 11:10AM',
+                    updated: 'December 11, 2014 at 11:10AM',
+                    text: 'First added model',
+                    quote: 'Note 1',
+                    tags: ['pie', 'pumpkin']
+                }
+            ]
+        };
+    };
+
+    stringStartsWith = function (string, prefix) {
+        return string.slice(0, prefix.length) == prefix;
+    };
+
+    verifyUrl = function (requestUrl, expectedUrl, expectedParams) {
+        expect(stringStartsWith(requestUrl, expectedUrl)).toBeTruthy();
+        verifyRequestParams(requestUrl, expectedParams);
+    };
+
+    verifyRequestParams = function (requestUrl, expectedParams) {
+        var urlParams = (new URI(requestUrl)).query(true);
+        _.each(expectedParams, function (value, key) {
+            expect(urlParams[key]).toBe(value);
+        });
     };
 
     return {
@@ -169,6 +194,9 @@ define(['underscore'], function(_) {
         getChapter: getChapter,
         getSection: getSection,
         getUnit: getUnit,
-        getDefaultNotes: getDefaultNotes
+        getDefaultNotes: getDefaultNotes,
+        stringStartsWith: stringStartsWith,
+        verifyUrl: verifyUrl,
+        verifyRequestParams: verifyRequestParams
     };
 });

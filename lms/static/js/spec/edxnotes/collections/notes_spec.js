@@ -6,7 +6,7 @@ define([
         var notes = Helpers.getDefaultNotes();
 
         beforeEach(function () {
-            this.collection = new NotesCollection(notes);
+            this.collection = new NotesCollection(notes, {perPage: 10, parse: true});
         });
 
         it('can return correct course structure', function () {

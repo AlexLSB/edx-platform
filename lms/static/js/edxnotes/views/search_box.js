@@ -96,8 +96,8 @@ define([
             if (args) {
                 this.options.search.apply(this, args);
                 this.logger.emit('edx.course.student_notes.searched', {
-                    'number_of_results': args[1],
-                    'search_string': args[2]
+                    'number_of_results': args[0].totalCount,
+                    'search_string': args[1]
                 });
             } else {
                 this.options.error(this.errorMessage, this.searchQuery);

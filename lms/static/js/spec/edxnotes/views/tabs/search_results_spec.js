@@ -29,8 +29,13 @@ define([
                 }
             ],
             responseJson = {
-                total: 3,
-                rows: notes
+                'count': 3,
+                'current_page': 1,
+                'num_pages': 1,
+                'start': 0,
+                'next': null,
+                'previous': null,
+                'results': notes
             },
             getView, submitForm, respondToSearch;
 
@@ -40,7 +45,8 @@ define([
                 tabsCollection: tabsCollection,
                 user: 'test_user',
                 courseId: 'course_id',
-                createTabOnInitialization: false
+                createTabOnInitialization: false,
+                perPage: 10
             });
             return new SearchResultsView(options);
         };
@@ -117,10 +123,7 @@ define([
                 requests = AjaxHelpers.requests(this);
 
             submitForm(view.searchBox, 'some text');
-            respondToSearch(requests, {
-                total: 0,
-                rows: []
-            });
+            respondToSearch(requests, _.extend(_.clone(responseJson), {count: 0, results: []}));
 
             expect(view.$('#search-results-panel')).not.toExist();
             expect(view.$('#no-results-panel')).toBeFocused();
@@ -201,8 +204,13 @@ define([
 
             submitForm(view.searchBox, 'new_test_query');
             respondToSearch(requests, {
-                total: 1,
-                rows: newNotes
+                'count': 1,
+                'current_page': 1,
+                'num_pages': 1,
+                'start': 0,
+                'next': null,
+                'previous': null,
+                'results': newNotes
             });
 
             expect(view.$('.note').length).toHaveLength(1);
