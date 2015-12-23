@@ -47,7 +47,7 @@ class ProgramsApiConfig(ConfigurationModel):
         help_text=_(
             "Specified in seconds. Enable caching by setting this to a value greater than 0."
         )
-    )    
+    )
 
     enable_student_dashboard = models.BooleanField(
         verbose_name=_("Enable Student Dashboard Displays"),
