@@ -30,6 +30,7 @@ __test__ = False  # do not collect
     ('extra_args=', 'e', 'adds as extra args to the test command'),
     ('cov_args=', 'c', 'adds as args to coverage for the test run'),
     ('skip_clean', 'C', 'skip cleaning repository before running tests'),
+    ('settings=', "S", "Django settings file to use"),
     make_option("--verbose", action="store_const", const=2, dest="verbosity"),
     make_option("-q", "--quiet", action="store_const", const=0, dest="verbosity"),
     make_option("-v", "--verbosity", action="count", dest="verbosity", default=1),
@@ -51,6 +52,7 @@ def test_system(options):
         'cov_args': getattr(options, 'cov_args', ''),
         'skip_clean': getattr(options, 'skip_clean', False),
         'pdb': getattr(options, 'pdb', False),
+        'settings': getattr(options, 'settings', 'test'),
     }
 
     if test_id:
