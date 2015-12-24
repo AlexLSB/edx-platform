@@ -2,9 +2,7 @@
 <%namespace name='static' file='static_content.html'/>
 <%!
 from util.markup import ugettext as _
-from openedx.core.lib.js_utils import (
-    escape_json_dumps, escape_js_string
-)
+from openedx.core.lib.js_utils import json, js
 %>
 <%page expression_filter="h"/>
 <!doctype html>
@@ -43,7 +41,7 @@ from openedx.core.lib.js_utils import (
     <a class="nav-skip" href="#content">${_("Skip to main content")}</a>
 
     <script type="text/javascript">
-      window.baseUrl = "${escape_js_string(settings.STATIC_URL) | n}";
+      window.baseUrl = "${settings.STATIC_URL | n,js}";
       var require = {baseUrl: window.baseUrl};
     </script>
     <script type="text/javascript" src="${static.url("js/vendor/require.js")}"></script>
@@ -81,14 +79,14 @@ from openedx.core.lib.js_utils import (
             % if context_course:
               require(['js/factories/course'], function(CourseFactory) {
                   CourseFactory({
-                      id: "${escape_js_string(context_course.id) | n}",
-                      name: "${escape_js_string(context_course.display_name_with_default) | n}",
-                      url_name: "${escape_js_string(context_course.location.name) | n}",
-                      org: "${escape_js_string(context_course.location.org) | n}",
-                      num: "${escape_js_string(context_course.location.course) | n}",
-                      display_course_number: "${escape_js_string(context_course.display_number_with_default) | n}",
-                      revision: "${escape_js_string(context_course.location.revision) | n}",
-                      self_paced: ${escape_json_dumps(context_course.self_paced) | n}
+                      id: "${context_course.id | n,js}",
+                      name: "${context_course.display_name_with_default | n,js}",
+                      url_name: "${context_course.location.name | n,js}",
+                      org: "${context_course.location.org | n,js}",
+                      num: "${context_course.location.course | n,js}",
+                      display_course_number: "${context_course.display_number_with_default | n,js}",
+                      revision: "${context_course.location.revision | n,js}",
+                      self_paced: ${context_course.self_paced | n,json}
                   });
               });
             % endif
