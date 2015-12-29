@@ -182,7 +182,7 @@ def _footer_navigation_links():
             ("contact", marketing_link("CONTACT"), _("Contact")),
             ("jobs", marketing_link("JOBS"), _("Jobs")),
             ("donate", marketing_link("DONATE"), _("Donate")),
-            ("mobileapp", marketing_link("MOBILEAPP"), _("Mobile app")),
+            ("mobileapp", "/moblieapp/", _("Mobile app")),
             ("sitemap", marketing_link("SITE_MAP"), _("Sitemap")),
         ]
         if link_url and link_url != "#"
