@@ -182,7 +182,7 @@ def _footer_navigation_links():
             ("help-center", settings.SUPPORT_SITE_LINK, _("Help Center")),
             ("contact", marketing_link("CONTACT"), _("Contact")),
             ("careers", marketing_link("CAREERS"), _("Careers")),
-            ("donate", marketing_link("DONATE"), _("Donate")),
+            ("mobileapp", marketing_link("MOBILEAPP"), _("Mobile app")),
             ("sitemap", marketing_link("SITE_MAP"), _("Sitemap")),
         ]
         if link_url and link_url != "#"
